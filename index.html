@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Money Flow</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:linear-gradient(180deg,#f3e8ff,#d8b4fe,#a855f7);
+  color:#3b0764;
+  min-height:100vh;
+}
+
+.hidden{display:none}
+
+.tela{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:25px;
+}
+
+.box{
+  width:100%;
+  max-width:430px;
+  background:rgba(255,255,255,.82);
+  border-radius:35px;
+  padding:35px 25px;
+  text-align:center;
+  box-shadow:0 18px 40px rgba(126,34,206,.25);
+  backdrop-filter:blur(12px);
+}
+
+.logo{
+  font-size:65px;
+}
+
+h1,h2{
+  text-align:center;
+  color:#7e22ce;
+}
+
+.sub{
+  text-align:center;
+  color:#6b21a8;
+  font-weight:bold;
+}
+
+.container{
+  max-width:460px;
+  margin:auto;
+  padding:22px;
+  min-height:100vh;
+}
+
+.card{
+  background:rgba(255,255,255,.82);
+  border-radius:28px;
+  padding:20px;
+  margin:16px 0;
+  box-shadow:0 12px 28px rgba(126,34,206,.18);
+  backdrop-filter:blur(10px);
+}
+
+.saldo{
+  font-size:38px;
+  font-weight:bold;
+  text-align:center;
+  color:#581c87;
+  margin:10px 0;
+}
+
+.resumo{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.boxResumo{
+  background:#faf5ff;
+  border-radius:20px;
+  padding:14px;
+  text-align:center;
+}
+
+.valor{
+  font-size:20px;
+  font-weight:bold;
+  color:#7e22ce;
+}
+
+input,select{
+  width:100%;
+  padding:14px;
+  margin-top:8px;
+  border-radius:16px;
+  border:1px solid #c084fc;
+  background:white;
+  font-size:15px;
+}
+
+label{
+  display:block;
+  margin-top:12px;
+  font-weight:bold;
+  color:#581c87;
+}
+
+button{
+  border:none;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.btn{
+  width:100%;
+  padding:15px;
+  margin-top:15px;
+  border-radius:20px;
+  background:linear-gradient(135deg,#7e22ce,#c084fc,#e9d5ff);
+  color:white;
+  font-size:16px;
+  box-shadow:0 8px 25px rgba(126,34,206,.28);
+}
+
+.filtros{
+  display:flex;
+  gap:8px;
+  margin-top:12px;
+}
+
+.filtros button{
+  flex:1;
+  padding:10px;
+  border-radius:14px;
+  background:#faf5ff;
+  color:#7e22ce;
+  border:1px solid #d8b4fe;
+}
+
+.mov{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background:#faf5ff;
+  padding:13px;
+  border-radius:18px;
+  margin-top:10px;
+}
+
+.mov-info{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.icone{
+  font-size:26px;
+}
+
+.nome{
+  font-weight:bold;
+}
+
+.data{
+  font-size:12px;
+  color:#7e22ce;
+}
+
+.entrada{
+  color:#15803d;
+  font-weight:bold;
+}
+
+.saida{
+  color:#be123c;
+  font-weight:bold;
+}
+
+.delete{
+  background:#be123c;
+  color:white;
+  border-radius:10px;
+  padding:7px 9px;
+  margin-left:6px;
+}
+
+.graficoBox{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin:15px 0;
+}
+
+.donut{
+  width:150px;
+  height:150px;
+  border-radius:50%;
+  background:conic-gradient(#22c55e 0deg, #22c55e 180deg, #fb7185 180deg, #fb7185 360deg);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 0 25px rgba(126,34,206,.25);
+}
+
+.donut::after{
+  content:"";
+  width:90px;
+  height:90px;
+  background:#faf5ff;
+  border-radius:50%;
+  position:absolute;
+}
+
+.donutTexto{
+  position:absolute;
+  z-index:2;
+  font-weight:bold;
+  color:#581c87;
+  text-align:center;
+}
+
+footer{
+  text-align:center;
+  font-size:12px;
+  color:#581c87;
+  margin-top:20px;
+  font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="tela" id="inicio">
+  <div class="box">
+    <div class="logo">💜</div>
+    <h1>Money Flow</h1>
+    <p class="sub">Seu dinheiro organizado de um jeito bonito e simples</p>
+    <button class="btn" onclick="abrirApp()">Abrir controle</button>
+  </div>
+</div>
+
+<div class="container hidden" id="app">
+
+  <div class="logo" style="text-align:center;">💸</div>
+  <h1>Money Flow</h1>
+  <p class="sub">Entradas, gastos e saldo em um só lugar</p>
+
+  <div class="card">
+    <h2>Saldo atual</h2>
+    <div class="saldo" id="saldo">R$0,00</div>
+
+    <div class="graficoBox">
+      <div class="donut" id="donut">
+        <div class="donutTexto" id="donutTexto">0%<br>entradas</div>
+      </div>
+    </div>
+
+    <div class="resumo">
+      <div class="boxResumo">
+        <div>Entrou</div>
+        <div class="valor" id="totalEntrada">R$0,00</div>
+      </div>
+      <div class="boxResumo">
+        <div>Saiu</div>
+        <div class="valor" id="totalSaida">R$0,00</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Adicionar movimentação</h2>
+
+    <label>Descrição</label>
+    <input type="text" id="descricao" placeholder="Ex: gasto com bala, cliente logo...">
+
+    <label>Valor</label>
+    <input type="number" id="valor" placeholder="Ex: 20">
+
+    <label>Tipo</label>
+    <select id="tipo">
+      <option value="entrada">Entrada</option>
+      <option value="saida">Saída</option>
+    </select>
+
+    <label>Data</label>
+    <input type="date" id="data">
+
+    <button class="btn" onclick="adicionarMovimentacao()">Salvar movimentação ✨</button>
+  </div>
+
+  <div class="card">
+    <h2>Histórico</h2>
+
+    <div class="filtros">
+      <button onclick="filtro='tudo'; atualizar()">Tudo</button>
+      <button onclick="filtro='entrada'; atualizar()">Entradas</button>
+      <button onclick="filtro='saida'; atualizar()">Gastos</button>
+    </div>
+
+    <div id="historico"></div>
+  </div>
+
+  <footer>Money Flow 💜✨</footer>
+
+</div>
+
+<script>
+let movimentos = JSON.parse(localStorage.getItem("moneyFlow")) || [];
+let filtro = "tudo";
+
+function abrirApp(){
+  document.getElementById("inicio").style.display="none";
+  document.getElementById("app").classList.remove("hidden");
+  atualizar();
+}
+
+function dinheiro(v){
+  return Number(v).toLocaleString("pt-BR", {
+    style:"currency",
+    currency:"BRL"
+  });
+}
+
+function icone(desc){
+  desc = desc.toLowerCase();
+
+  if(desc.includes("bala") || desc.includes("doce")) return "🍬";
+  if(desc.includes("mercado") || desc.includes("compra")) return "🛒";
+  if(desc.includes("comida") || desc.includes("lanche")) return "🍔";
+  if(desc.includes("cliente") || desc.includes("logo")) return "💖";
+  if(desc.includes("anúncio") || desc.includes("anuncio")) return "📢";
+  if(desc.includes("pix")) return "💸";
+  if(desc.includes("casa")) return "🏠";
+  if(desc.includes("criança") || desc.includes("filho")) return "👶";
+  return "💜";
+}
+
+function adicionarMovimentacao(){
+  let descricao = document.getElementById("descricao").value;
+  let valor = Number(document.getElementById("valor").value);
+  let tipo = document.getElementById("tipo").value;
+  let data = document.getElementById("data").value;
+
+  if(!descricao || !valor){
+    alert("Preencha descrição e valor.");
+    return;
+  }
+
+  movimentos.push({
+    descricao,
+    valor,
+    tipo,
+    data: data || new Date().toISOString().slice(0,10)
+  });
+
+  localStorage.setItem("moneyFlow", JSON.stringify(movimentos));
+
+  document.getElementById("descricao").value="";
+  document.getElementById("valor").value="";
+  document.getElementById("data").value="";
+
+  atualizar();
+}
+
+function excluir(index){
+  if(confirm("Excluir movimentação?")){
+    movimentos.splice(index,1);
+    localStorage.setItem("moneyFlow", JSON.stringify(movimentos));
+    atualizar();
+  }
+}
+
+function atualizarResumo(){
+  let entradas = movimentos.filter(m=>m.tipo==="entrada").reduce((s,m)=>s+m.valor,0);
+  let saidas = movimentos.filter(m=>m.tipo==="saida").reduce((s,m)=>s+m.valor,0);
+  let saldo = entradas - saidas;
+
+  document.getElementById("saldo").innerText = dinheiro(saldo);
+  document.getElementById("totalEntrada").innerText = dinheiro(entradas);
+  document.getElementById("totalSaida").innerText = dinheiro(saidas);
+
+  let total = entradas + saidas;
+  let porcentagem = total === 0 ? 0 : Math.round((entradas / total) * 100);
+  let graus = total === 0 ? 0 : (entradas / total) * 360;
+
+  document.getElementById("donut").style.background =
+  `conic-gradient(#22c55e 0deg, #22c55e ${graus}deg, #fb7185 ${graus}deg, #fb7185 360deg)`;
+
+  document.getElementById("donutTexto").innerHTML =
+  `${porcentagem}%<br>entradas`;
+}
+
+function atualizarHistorico(){
+  let box = document.getElementById("historico");
+  box.innerHTML = "";
+
+  let lista = movimentos
+    .map((m,i)=>({...m,index:i}))
+    .filter(m=>filtro==="tudo" || m.tipo===filtro)
+    .reverse();
+
+  if(lista.length === 0){
+    box.innerHTML = "<p style='text-align:center;color:#7e22ce;'>Nada registrado ainda.</p>";
+    return;
+  }
+
+  lista.forEach(m=>{
+    box.innerHTML += `
+      <div class="mov">
+        <div class="mov-info">
+          <div class="icone">${icone(m.descricao)}</div>
+          <div>
+            <div class="nome">${m.descricao}</div>
+            <div class="data">${m.data}</div>
+          </div>
+        </div>
+
+        <div>
+          <span class="${m.tipo === "entrada" ? "entrada" : "saida"}">
+            ${m.tipo === "entrada" ? "+" : "-"} ${dinheiro(m.valor)}
+          </span>
+          <button class="delete" onclick="excluir(${m.index})">x</button>
+        </div>
+      </div>
+    `;
+  });
+}
+
+function atualizar(){
+  atualizarResumo();
+  atualizarHistorico();
+}
+</script>
+
+</body>
+</html>
